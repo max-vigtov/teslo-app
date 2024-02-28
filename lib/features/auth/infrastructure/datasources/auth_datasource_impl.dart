@@ -23,10 +23,12 @@ class AuthDataSourceImpl extends AuthDataSource {
     });
     final user = UserMapper.userToJsonToEntity(response.data);
     return user;
+
     } catch (e) {
       throw WrongCredentials();
     }
   }  
+
   
   @override
   Future<User> checkAuthStatus(String token) {
