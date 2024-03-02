@@ -106,9 +106,9 @@ class _LoginForm extends ConsumerWidget {
             child: CustomFilledButton(
               text: 'Ingresar',
               buttonColor: Colors.black,
-              onPressed: (){
-                ref.read(loginFormProvider.notifier).onFormSubmit();
-              },
+              onPressed: loginForm.isPosting 
+              ? null 
+              : () =>  ref.read(loginFormProvider.notifier).onFormSubmit()
             )
           ),
 
@@ -119,7 +119,7 @@ class _LoginForm extends ConsumerWidget {
             children: [
               const Text('¿No tienes cuenta?'),
               TextButton(
-                onPressed: ()=> context.push('/register'), 
+                onPressed: () => context.push('/register'), 
                 child: const Text('Crea una aquí')
               )
             ],
