@@ -1,4 +1,40 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:teslo_shop/features/products/domain/domain.dart';
+
+class ProductsNotifier extends StateNotifier<ProductsState> {
+
+  final ProductsRepository productsRepository;
+  ProductsNotifier({required this.productsRepository
+  }): super( ProductsState() ) {
+    loadNextPage();
+  }
+
+  Future loadNextPage() async {
+
+    if (state.isLastPage || state.isLastPage) return;
+
+    state = state.copyWith(isLoading: true);
+
+    final products =  await productsRepository
+      .getProductByPage(limit: state.limit, offset: state.offset);
+
+    if(products.isEmpty){
+      state = state.copyWith(
+        isLoading: false,
+        isLastPage: true
+      );
+      return;
+    }
+    state = state.copyWith(
+      isLastPage: false,
+      isLoading: false,
+      offset: state.offset + 10,
+      products: [...state.products, ...products]
+    );
+  }
+}
+
+
 
 class ProductsState{
 
@@ -17,13 +53,13 @@ class ProductsState{
   });
 
 
-ProductsState copyWith(
+ProductsState copyWith({
   bool? isLastPage,
   int? limit,
   int? offset,
   bool? isLoading,
   List<Product>? products,  
- ) => ProductsState(
+ }) => ProductsState(
   isLastPage: isLastPage ?? this.isLastPage,
   limit: limit ?? this.limit,
   offset: offset ?? this.offset,
