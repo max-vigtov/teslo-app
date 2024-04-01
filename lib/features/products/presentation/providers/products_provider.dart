@@ -1,6 +1,17 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:teslo_shop/features/products/domain/domain.dart';
 
+import 'products_repository_provider.dart';
+
+final productsProvider = StateNotifierProvider<ProductsNotifier, ProductsState>((ref) {
+  final productsRepository = ref.watch(productsRepositoryProvider);
+
+  return ProductsNotifier(
+    productsRepository: productsRepository
+  );
+});
+
+
 class ProductsNotifier extends StateNotifier<ProductsState> {
 
   final ProductsRepository productsRepository;
@@ -11,7 +22,7 @@ class ProductsNotifier extends StateNotifier<ProductsState> {
 
   Future loadNextPage() async {
 
-    if (state.isLastPage || state.isLastPage) return;
+    if (state.isLoading || state.isLastPage) return;
 
     state = state.copyWith(isLoading: true);
 
@@ -33,8 +44,6 @@ class ProductsNotifier extends StateNotifier<ProductsState> {
     );
   }
 }
-
-
 
 class ProductsState{
 
