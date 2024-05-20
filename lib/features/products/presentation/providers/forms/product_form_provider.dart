@@ -14,8 +14,6 @@ import 'package:teslo_shop/features/shared/shared.dart';
     
   });
 
-
-
 class ProductFormNotifier extends StateNotifier<ProductFormState> {
   
   final void Function( Map<String, dynamic> productLike)? onSubmitCallBack;
@@ -30,7 +28,7 @@ class ProductFormNotifier extends StateNotifier<ProductFormState> {
     slug:  Slug.dirty(product.slug),
     price:Price.dirty(product.price) ,
     inStock: Stock.dirty(product.stock),
-    size: product.sizes,
+    sizes: product.sizes,
     gender: product.gender,
     description: product.description,
     tags: product.tags.join(', '),
@@ -49,7 +47,7 @@ class ProductFormNotifier extends StateNotifier<ProductFormState> {
       'description': state.description,
       'slug': state.slug.value,
       'stock': state.inStock.value,
-      'sizes': state.size,
+      'sizes': state.sizes,
       'gender': state.gender,
       'tags': state.tags.split(', '),
       'images': state.images.map((image) => image.replaceAll('${ Enviroment.apiUrl }/files/product/', '')
@@ -119,7 +117,7 @@ class ProductFormNotifier extends StateNotifier<ProductFormState> {
 
   void onSizeChanged(List<String> sizes){
     state = state.copyWith(
-      size: sizes
+      sizes: sizes
     );
   }
 
@@ -148,7 +146,7 @@ class ProductFormState{
   final Title title;
   final Slug slug;
   final Price price;
-  final List<String> size;
+  final List<String> sizes;
   final String gender;
   final Stock inStock;
   final String description;
@@ -161,7 +159,7 @@ class ProductFormState{
     this.title = const Title.dirty(''),
     this.slug = const Slug.dirty(''),
     this.price = const Price.dirty(0),
-    this.size = const [],
+    this.sizes = const [],
     this.gender = 'men',
     this.inStock = const Stock.dirty(0),
     this.description = '',
@@ -175,7 +173,7 @@ class ProductFormState{
    Title? title,
    Slug? slug,
    Price? price,
-   List<String>? size,
+   List<String>? sizes,
    String? gender,
    Stock? inStock,
    String? description,
@@ -188,7 +186,7 @@ class ProductFormState{
     title: title ??  this.title,
     slug: slug ?? this.slug,
     price: price ?? this.price,
-    size: size ?? this.size,
+    sizes: sizes ?? this.sizes,
     gender: gender ?? this.gender,
     inStock: inStock ?? this.inStock,
     description: description ?? this.description,
