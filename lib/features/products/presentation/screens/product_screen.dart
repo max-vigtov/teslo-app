@@ -26,7 +26,10 @@ class ProductScreen extends ConsumerWidget {
       ? const FullScreenLoader() 
       : _ProductView(product: productState.product!),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){},
+        onPressed: (){
+          productState.product == null ? null
+          : ref.read(productFormProvider(productState.product!).notifier).onFormSubmit();
+        },
         child: const Icon(Icons.save_as_outlined),
         ),
     );
@@ -109,7 +112,7 @@ class _ProductInformation extends ConsumerWidget {
 
           _SizeSelector(
             selectedSizes: productForm.sizes,
-            onSizesChanged: ref.read( productFormProvider(product).notifier).onSizeChanged,
+            onSizesChanged: ref.read(productFormProvider(product).notifier).onSizeChanged,
 
             ),
           const SizedBox(height: 5 ),
@@ -156,15 +159,18 @@ class _ProductInformation extends ConsumerWidget {
 class _SizeSelector extends StatelessWidget {
   final List<String> selectedSizes;
   final List<String> sizes = const['XS','S','M','L','XL','XXL','XXXL'];
+
   final void Function(List<String> selectedSizes) onSizesChanged;
 
   const _SizeSelector({
-    required this.selectedSizes, 
-    required this.onSizesChanged});
+    required this.selectedSizes,
+    required this.onSizesChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
     return SegmentedButton(
+      emptySelectionAllowed: true,
       showSelectedIcon: false,
       segments: sizes.map((size) {
         return ButtonSegment(
@@ -174,12 +180,20 @@ class _SizeSelector extends StatelessWidget {
       }).toList(), 
       selected: Set.from( selectedSizes ),
       onSelectionChanged: (newSelection) {
-        onSizesChanged(List.from(newSelection));
+         // Convert the selection to a list
+        List<String> selectionList = List<String>.from(newSelection);
+
+        // Remove "sizes" if it exists in the list
+        selectionList.remove('sizes');
+        print(selectionList);
+        // Call the onSizesChanged callback with the updated list
+        onSizesChanged(selectionList);
       },
       multiSelectionEnabled: true,
     );
   }
 }
+
 
 class _GenderSelector extends StatelessWidget {
   final String selectedGender;
@@ -209,6 +223,7 @@ class _GenderSelector extends StatelessWidget {
         }).toList(), 
         selected: { selectedGender },
         onSelectionChanged: (newSelection) {
+          print(newSelection);
          onGenderChanged(newSelection.first);
         },
       ),

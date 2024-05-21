@@ -32,10 +32,12 @@ final goRouterProvider = Provider((ref) {
         path: '/',
         builder: (context, state) => const ProductsScreen(),
       ),
+
       GoRoute(
-        path: '/product/:id',
-        builder: (context, state) =>  ProductScreen(productId: state.params['id'] ?? 'no-id',),
-      ),      
+        path: '/product/:id', // /product/new
+        builder: (context, state) 
+        => ProductScreen(productId: state.params['id'] ?? 'no-id' ),
+      ),
     ],
     redirect: (context, state) {
       final isGoingTo = state.subloc;
@@ -51,9 +53,6 @@ final goRouterProvider = Provider((ref) {
       if(authStatus == AuthStatus.authenticated){
         if(isGoingTo == '/login' || isGoingTo == '/register' || isGoingTo == '/splash') return '/';
       }
-
-      
-
       return null;
     },
   );

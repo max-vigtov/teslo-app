@@ -9,7 +9,7 @@ class AuthDataSourceImpl extends AuthDataSource {
 
   final dio = Dio(
     BaseOptions(
-      baseUrl: Enviroment.apiUrl
+      baseUrl: Environment.apiUrl
     )
   );
   

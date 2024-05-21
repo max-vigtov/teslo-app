@@ -25,8 +25,8 @@ class ProductFormNotifier extends StateNotifier<ProductFormState> {
     ProductFormState(
     id: product.id,
     title: Title.dirty(product.title),
-    slug:  Slug.dirty(product.slug),
-    price:Price.dirty(product.price) ,
+    slug: Slug.dirty(product.slug),
+    price: Price.dirty(product.price) ,
     inStock: Stock.dirty(product.stock),
     sizes: product.sizes,
     gender: product.gender,
@@ -38,7 +38,7 @@ class ProductFormNotifier extends StateNotifier<ProductFormState> {
   Future<bool>  onFormSubmit() async{
     _touchedEverything();
     if(!state.isFormValid) return false;
-    if(onSubmitCallBack == null) return false;
+  //  if(onSubmitCallBack == null) return false;
 
     final productLike = {
       'id': state.id,
@@ -50,7 +50,7 @@ class ProductFormNotifier extends StateNotifier<ProductFormState> {
       'sizes': state.sizes,
       'gender': state.gender,
       'tags': state.tags.split(', '),
-      'images': state.images.map((image) => image.replaceAll('${ Enviroment.apiUrl }/files/product/', '')
+      'images': state.images.map((image) => image.replaceAll('${ Environment.apiUrl }/files/product/', '')
       ).toList()
     };
     return true;

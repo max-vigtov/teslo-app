@@ -13,7 +13,7 @@ class ProductsDatasourceImpl extends ProductsDatasource{
     required  this.accessToken,
   }): dio = Dio(
     BaseOptions(
-      baseUrl: Enviroment.apiUrl,
+      baseUrl: Environment.apiUrl,
       headers: {
         'Authorization': 'Bearer $accessToken',
       }

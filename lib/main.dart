@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:teslo_shop/config/config.dart';
 
 void main() async{
-  await Enviroment.initEnviroment();
+  await Environment.initEnvironment();
 
   runApp(
     const ProviderScope(child: MainApp())
