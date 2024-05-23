@@ -2,21 +2,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:formz/formz.dart';
 import 'package:teslo_shop/config/constants/enviroment.dart';
 import 'package:teslo_shop/features/products/domain/domain.dart';
+import 'package:teslo_shop/features/products/presentation/providers/providers.dart';
 import 'package:teslo_shop/features/shared/shared.dart';
 
   final productFormProvider = StateNotifierProvider.autoDispose.family<ProductFormNotifier, ProductFormState, Product>(
     (ref, product) {
-    //TODO: creatUpdateCallback
 
-    return ProductFormNotifier(product: product);
+    final createUpdateCallback = ref.watch(productsProvider.notifier).createUpdateProduct;
 
-    //TODO: onSubmitCallback: creatUpdateCallback
-    
+    return ProductFormNotifier(
+      product: product,
+      onSubmitCallBack: createUpdateCallback
+    );    
   });
 
 class ProductFormNotifier extends StateNotifier<ProductFormState> {
   
-  final void Function( Map<String, dynamic> productLike)? onSubmitCallBack;
+  final Future<bool> Function( Map<String, dynamic> productLike)? onSubmitCallBack;
 
   ProductFormNotifier({
     this.onSubmitCallBack,
@@ -35,10 +37,10 @@ class ProductFormNotifier extends StateNotifier<ProductFormState> {
     images: product.images
   ));
 
-  Future<bool>  onFormSubmit() async{
+  Future<bool> onFormSubmit() async{
     _touchedEverything();
     if(!state.isFormValid) return false;
-  //  if(onSubmitCallBack == null) return false;
+    if(onSubmitCallBack == null) return false;
 
     final productLike = {
       'id': state.id,
@@ -53,7 +55,12 @@ class ProductFormNotifier extends StateNotifier<ProductFormState> {
       'images': state.images.map((image) => image.replaceAll('${ Environment.apiUrl }/files/product/', '')
       ).toList()
     };
-    return true;
+    try {
+      await onSubmitCallBack!( productLike );
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   void _touchedEverything(){
