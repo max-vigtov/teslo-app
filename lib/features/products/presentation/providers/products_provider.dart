@@ -84,7 +84,7 @@ class ProductsState{
   });
 
 
-ProductsState copyWith({
+ ProductsState copyWith({
   bool? isLastPage,
   int? limit,
   int? offset,

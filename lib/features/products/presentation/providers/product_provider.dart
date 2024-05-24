@@ -22,9 +22,31 @@ class ProductNotifier extends StateNotifier<ProductState> {
   }): super(ProductState(id: productId)){
     loadProduct();
   }
+
+Product _newEmptyProduct(){
+    return Product(
+        id: 'new',
+        title: 'New title',
+        price: 0,
+        description: '',
+        slug: '',
+        stock: 0,
+        sizes: [],
+        gender: 'men',
+        tags: [],
+        images: [],
+      );
+  }
   
   Future<void> loadProduct() async{
     try {
+      if(state.id == 'new'){
+        state = state.copyWith(
+          isLoading: false,
+          product: _newEmptyProduct()
+        );
+        return;
+      }
       final product = await productsRepository.getProductById(state.id);
 
       state = state.copyWith(
@@ -34,7 +56,6 @@ class ProductNotifier extends StateNotifier<ProductState> {
 
     } catch (e) {
       //404 product not found
-      print(e);
     }
   }
 }

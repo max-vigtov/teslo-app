@@ -1,9 +1,8 @@
+import '../../domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:teslo_shop/features/products/presentation/providers/providers.dart';
 import 'package:teslo_shop/features/shared/shared.dart';
-
-import '../../domain/domain.dart';
+import 'package:teslo_shop/features/products/presentation/providers/providers.dart';
 
 class ProductScreen extends ConsumerWidget {
 
@@ -23,28 +22,32 @@ class ProductScreen extends ConsumerWidget {
 
     final productState = ref.watch(productProvider(productId));
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Editar Producto'),
-        actions: [
-          IconButton(onPressed: (){}, icon: const Icon(Icons.camera_alt_outlined))
-        ],
-      ),
-      body:  productState.isLoading 
-      ? const FullScreenLoader() 
-      : _ProductView(product: productState.product!),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          productState.product == null 
-          ? null
-          : ref.read(productFormProvider(productState.product!).notifier)
-            .onFormSubmit().then((value) {
-              if(!value) return;
-              showSnackbar(context);
-            });
-        },
-        child: const Icon(Icons.save_as_outlined),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Editar Producto'),
+          actions: [
+            IconButton(onPressed: (){}, icon: const Icon(Icons.camera_alt_outlined))
+          ],
         ),
+        body: productState.isLoading 
+        ? const FullScreenLoader() 
+        : _ProductView(product: productState.product!),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            productState.product == null 
+            ? null
+            : ref.read(productFormProvider(productState.product!).notifier)
+              .onFormSubmit().then((value) {
+                if(!value) return;
+                showSnackbar(context);
+              });
+            FocusScope.of(context).unfocus();              
+          },
+          child: const Icon(Icons.save_as_outlined),
+          ),
+      ),
     );
   }
 }
@@ -94,7 +97,6 @@ class _ProductInformation extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref ) {
 
     final productForm = ref.watch( productFormProvider(product) );
-
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -171,7 +173,6 @@ class _ProductInformation extends ConsumerWidget {
             onChanged: ref.read( productFormProvider(product).notifier).onTagsChanged,
           ),
 
-
           const SizedBox(height: 100 ),
         ],
       ),
@@ -190,7 +191,6 @@ class _SizeSelector extends StatelessWidget {
     required this.onSizesChanged,
   });
 
-
   @override
   Widget build(BuildContext context) {
     return SegmentedButton(
@@ -204,6 +204,7 @@ class _SizeSelector extends StatelessWidget {
       }).toList(), 
       selected: Set.from( selectedSizes ),
       onSelectionChanged: (newSelection) {
+        FocusScope.of(context).unfocus();
         onSizesChanged( List.from(newSelection) );
       },
       multiSelectionEnabled: true,
@@ -239,7 +240,7 @@ class _GenderSelector extends StatelessWidget {
         }).toList(), 
         selected: { selectedGender },
         onSelectionChanged: (newSelection) {
-          print(newSelection);
+         FocusScope.of(context).unfocus();
          onGenderChanged(newSelection.first);
         },
       ),
