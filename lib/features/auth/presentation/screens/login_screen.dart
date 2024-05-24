@@ -109,7 +109,11 @@ class _LoginForm extends ConsumerWidget {
               buttonColor: Colors.black,
               onPressed: loginForm.isPosting 
               ? null 
-              : () =>  ref.read(loginFormProvider.notifier).onFormSubmit()
+              : () { 
+                ref.read(loginFormProvider.notifier).onFormSubmit();
+                FocusScope.of(context).unfocus();
+              }
+              
             )
           ),
 
