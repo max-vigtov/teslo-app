@@ -23,7 +23,7 @@ class GoRouterNotifier extends ChangeNotifier{
   AuthStatus get authStatus => _authStatus;
 
   set authStatus( AuthStatus value ) {
-    _authStatus = value;
+    _authStatus = value; 
     notifyListeners();
   }
 }

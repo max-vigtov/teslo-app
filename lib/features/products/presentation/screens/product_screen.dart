@@ -84,7 +84,6 @@ class _ProductView extends ConsumerWidget {
     final productForm = ref.watch( productFormProvider(product));
 
     final textStyles = Theme.of(context).textTheme;
-    print(productForm.id);
 
     return ListView(
       children: [
